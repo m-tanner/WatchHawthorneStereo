@@ -1,0 +1,25 @@
+apiVersion: skaffold/v2beta23
+kind: Config
+metadata:
+  name: ssc-skaffold
+build:
+  artifacts:
+    - image: gcr.io/four-track-friday-2/watch_hawthorne_stereo
+      context: .
+      docker:
+        dockerfile: src/docker/Dockerfile
+        cacheFrom:
+          - "amazoncorretto:11-alpine3.14-jdk"
+        buildArgs:
+          SERVICE_VERSION: "0.1.0-SNAPSHOT"
+  tagPolicy:
+    gitCommit: {}
+  local: {}
+test:
+  - image: gcr.io/four-track-friday-2/watch_hawthorne_stereo
+    structureTests:
+      - ./src/test/container-structure/test_commands.yml
+      - ./src/test/container-structure/test_metadata.yml
+deploy: {}
+# no custom profiles here
+# this skaffold config stops at pushing the docker image to the registry
