@@ -21,6 +21,7 @@ val runtimeDependencies = Seq(
   play.sbt.PlayImport.guice, // needs both guice dependencies
   play.sbt.PlayImport.ws,
   Common.json4sNative,
+  Common.jSoup,
 )
 
 val testDependencies = Seq(

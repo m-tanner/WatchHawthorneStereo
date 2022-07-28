@@ -19,7 +19,7 @@
 
     <logger name="play" level="INFO"/>
     <logger name="application" level="DEBUG"/>
-    <logger name="com.streamingswap" level="DEBUG"/>
+    <logger name="com.watchhawthornestereo" level="DEBUG"/>
     <logger name="v1.statistics" level="TRACE" />
 
     <root level="INFO">

@@ -1,6 +1,6 @@
-package com.streamingswap.health
+package com.watchhawthornestereo.health
 
-import com.streamingswap.{ PlaySpec, Settings }
+import com.watchhawthornestereo.{PlaySpec, Settings}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder

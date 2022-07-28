@@ -12,20 +12,21 @@ object Common {
     Test / fork := true,
   )
 
-  val playWsStandaloneVersion = "2.1.6"
+  val playWsStandaloneVersion = "2.1.10"
 
   // Shared Dependencies
-  val guice          = "com.google.inject"           % "guice"           % "5.0.1"
-  val typesafeConfig = "com.typesafe"                % "config"          % "1.4.1"
-  val scalaLogging   = "com.typesafe.scala-logging" %% "scala-logging"   % "3.9.4"
-  val logback        = "ch.qos.logback"              % "logback-classic" % "1.2.10"
-  val json4sNative   = "org.json4s"                 %% "json4s-native"   % "4.0.2"
+  val guice          = "com.google.inject"           % "guice"           % "5.1.0"
+  val typesafeConfig = "com.typesafe"                % "config"          % "1.4.2"
+  val scalaLogging   = "com.typesafe.scala-logging" %% "scala-logging"   % "3.9.5"
+  val logback        = "ch.qos.logback"              % "logback-classic" % "1.2.11"
+  val json4sNative   = "org.json4s"                 %% "json4s-native"   % "4.0.5"
+  val jSoup          = "org.jsoup"                   % "jsoup"           % "1.14.3"
 
   // Testing
-  val scalaTest        = "org.scalatest"            %% "scalatest"               % "3.2.9"                 % Test
+  val scalaTest        = "org.scalatest"            %% "scalatest"               % "3.2.12"                % Test
   val scalaTestPlus    = "org.scalatestplus.play"   %% "scalatestplus-play"      % "5.1.0"                 % Test
   val scalaMock        = "org.scalamock"            %% "scalamock"               % "5.2.0"                 % Test
-  val scalaCheck       = "org.scalacheck"           %% "scalacheck"              % "1.15.4"                % Test
+  val scalaCheck       = "org.scalacheck"           %% "scalacheck"              % "1.16.0"                % Test
   val playMockWS       = "de.leanovate.play-mockws" %% "play-mockws"             % "2.8.1"                 % Test
   val wsStandalone     = "com.typesafe.play"        %% "play-ahc-ws-standalone"  % playWsStandaloneVersion % Test
   val wsStandaloneJson = "com.typesafe.play"        %% "play-ws-standalone-json" % playWsStandaloneVersion % Test

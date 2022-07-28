@@ -1,4 +1,4 @@
-package com.streamingswap
+package com.watchhawthornestereo
 
 import com.typesafe.scalalogging.LazyLogging
 import play.api.libs.ws.WSClient

@@ -1,6 +1,6 @@
-package com.streamingswap.health
+package com.watchhawthornestereo.health
 
-import com.streamingswap.Settings
+import com.watchhawthornestereo.Settings
 import play.api.Logger
 import play.api.mvc._
 

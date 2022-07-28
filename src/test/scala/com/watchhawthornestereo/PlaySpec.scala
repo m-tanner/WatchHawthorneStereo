@@ -1,4 +1,4 @@
-package com.streamingswap
+package com.watchhawthornestereo
 
 import org.scalatest.OptionValues
 import org.scalatest.matchers.must.Matchers

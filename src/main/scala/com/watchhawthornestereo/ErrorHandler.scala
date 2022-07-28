@@ -1,4 +1,4 @@
-package com.streamingswap
+package com.watchhawthornestereo
 
 import com.typesafe.scalalogging.LazyLogging
 import play.api._
@@ -10,7 +10,7 @@ import play.api.mvc._
 import play.api.routing.Router
 import play.core.SourceMapper
 
-import javax.inject.{ Inject, Provider }
+import javax.inject.{Inject, Provider}
 import scala.concurrent._
 
 /**
