@@ -62,7 +62,7 @@ see [containers](./documentation/k8s.svg).
 docker run --rm -it --entrypoint=/bin/bash watch_hawthorne_stereo
 
 # build from the repo root
-docker build . --file ./src/docker/Dockerfile --tag watch_hawthorne_stereo:latest --build-arg SERVICE_VERSION="0.1.0-SNAPSHOT"
+docker build . --platform linux/amd64 --file ./src/docker/Dockerfile --tag watch_hawthorne_stereo:latest --build-arg SERVICE_VERSION="0.1.0-SNAPSHOT"
 # add `--target build0` to stop at the build0 stage
 
 # run
@@ -121,9 +121,9 @@ The app is deployed [here](https://console.cloud.google.com/run/detail/us-west1/
    ```
    OR [install GraalVM on Mac](https://www.graalvm.org/docs/getting-started/macos/)
 5) Install Docker Desktop
-    1) [Intel Mac](https://desktop.docker.com/mac/main/amd64/Docker.dmg)
-    2) [M Mac](https://desktop.docker.com/mac/main/arm64/Docker.dmg)
-6) Ensure Docker Desktop is totally up to date! This may take several updates.
+   1) [Intel Mac](https://desktop.docker.com/mac/main/amd64/Docker.dmg)
+   2) [M Mac](https://desktop.docker.com/mac/main/arm64/Docker.dmg)
+6) Ensure Docker Desktop is totally up-to-date! This may take several updates.
 7) Run the following:
    ```shell
    skaffold build

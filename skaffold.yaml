@@ -1,15 +1,20 @@
-apiVersion: skaffold/v2beta23
+apiVersion: skaffold/v2beta29
 kind: Config
 metadata:
   name: ssc-skaffold
 build:
+  platforms:
+    - linux/amd64
   artifacts:
     - image: gcr.io/four-track-friday-2/watch_hawthorne_stereo
+      hooks:
+        before:
+          - command: [ "./bin/sbt", "clean", "dist" ]
+        after:
+          - command: [ "./bin/sbt", "clean" ]
       context: .
       docker:
         dockerfile: src/docker/Dockerfile
-        cacheFrom:
-          - "amazoncorretto:11-alpine3.14-jdk"
         buildArgs:
           SERVICE_VERSION: "0.1.0-SNAPSHOT"
   tagPolicy:

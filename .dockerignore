@@ -2,6 +2,6 @@
 .bsp/
 .idea/
 .teamcity/
-target/
 */target/*
 *.sh
+# do not ignore target!

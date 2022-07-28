@@ -1,4 +1,4 @@
-GET     /                   @controllers.Default.redirect(to = "/health")
-GET     /health             @com.watchhawthornestereo.health.HealthController.index()
-GET     /favicon.ico        @controllers.Assets.at(path="/public", file="favicon.ico")
-->     /v1                  com.watchhawthornestereo.v1.Router
+GET        /                   @controllers.Default.redirect(to = "/health")
+GET        /health             @com.watchhawthornestereo.health.HealthController.index()
+GET        /favicon.ico        @controllers.Assets.at(path="/public", file="favicon.ico")
+->         /v1                 com.watchhawthornestereo.v1.Router
