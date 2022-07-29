@@ -1,22 +1,45 @@
 package com.watchhawthornestereo.hawthorne
 
+import com.watchhawthornestereo.storage.LocalFilesystem
 import com.watchhawthornestereo.{Client, Settings}
 import org.json4s.DefaultFormats
 import org.json4s.native.{Json => Json4s}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import play.api.libs.json.{Json, Reads}
 import play.api.libs.ws.WSClient
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 import scala.jdk.CollectionConverters._
 import scala.language.{implicitConversions, postfixOps}
+import scala.util.{Failure, Success, Try}
 
-class HawthorneClient @Inject()(ws: WSClient, settings: Settings)(implicit ec: ExecutionContext)
-  extends Client(ws, settings)(ec) {
+class HawthorneClient @Inject()(ws: WSClient, fs: LocalFilesystem, settings: Settings)(implicit ec: ExecutionContext)
+  extends Client(ws, fs, settings)(ec) {
 
-  def findNewListings(): String = {
-    val listings = fetchRssListings()
+  def getNewest: Try[String] = {
+    val newListings = getListings
+    fs.read match {
+      case Success(value) =>
+        fs.save(newListings) // update it so that next time it's up to date
+        Success(calculateDifference(newListings, value))
+      case Failure(exception) => Failure(exception)
+    }
+  }
+
+  private def calculateDifference(a: String, b: String): String = {
+    Json4s(DefaultFormats).write("listings" -> asList(a).filterNot(asList(b).toSet))
+  }
+
+  private def asList(s: String): List[UnifiedListing] = {
+    implicit val unifiedListingReads: Reads[UnifiedListing] = Json.reads[UnifiedListing]
+
+    Json.parse(s).as[UnifiedListings](Json.reads[UnifiedListings]).listings
+  }
+
+  def getListings: String = {
+    val listings = fetchRssListings
 
     val hydratedListings = for (l <- listings) yield fetchHtmlListing(l)
 
@@ -25,7 +48,7 @@ class HawthorneClient @Inject()(ws: WSClient, settings: Settings)(implicit ec: E
     Json4s(DefaultFormats).write("listings" -> unifiedListings)
   }
 
-  private def fetchRssListings(): List[RssListing] = {
+  private def fetchRssListings: List[RssListing] = {
     val doc = Jsoup.connect(settings.hawthorneRss).get()
     val elements = doc.select("item").asScala
     val listings = for (e <- elements)
@@ -66,5 +89,5 @@ class HawthorneClient @Inject()(ws: WSClient, settings: Settings)(implicit ec: E
 }
 
 object HawthorneClient {
-  def apply(ws: WSClient, settings: Settings)(ec: ExecutionContext) = new HawthorneClient(ws, settings)(ec)
+  def apply(ws: WSClient, fs: LocalFilesystem, settings: Settings)(ec: ExecutionContext) = new HawthorneClient(ws, fs, settings)(ec)
 }

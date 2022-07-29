@@ -8,8 +8,9 @@ import javax.inject.Inject
 
 class Router @Inject()(controller: Controller) extends SimpleRouter {
 
-  override def routes: Routes = { case GET(p"/listings/new") =>
-    controller.findNewListings()
+  override def routes: Routes = {
+    case GET(p"/listings") => controller.getListings
+    case GET(p"/listings/new") => controller.getNewest
   }
 
 }

@@ -12,12 +12,30 @@ class Controller @Inject()(val hawthorneClient: HawthorneClient, val controllerC
     extends BaseController
     with LazyLogging {
 
-  def findNewListings: Action[AnyContent] = Action {
-    val methodName = "findNewListings"
+  def getNewest: Action[AnyContent] = Action {
+    val methodName = "getNewest"
+    logger.info(methodName)
+
+    val response = hawthorneClient.getNewest
+
+    logMemory() // TODO this is for debugging, remove when able
+
+    response match {
+      case Success(s) =>
+        logger.info(s"$methodName succeeded")
+        Ok(s)
+      case Failure(_) =>
+        logger.error(s"$methodName failed")
+        InternalServerError("sorry, but we could not complete your request")
+    }
+  }
+
+  def getListings: Action[AnyContent] = Action {
+    val methodName = "getListings"
     logger.info(methodName)
 
     val response = Try {
-      val result: String = hawthorneClient.findNewListings()
+      val result: String = hawthorneClient.getListings
       result
     }
 

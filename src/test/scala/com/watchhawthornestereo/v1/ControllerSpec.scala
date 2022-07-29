@@ -1,6 +1,7 @@
 package com.watchhawthornestereo.v1
 
 import com.watchhawthornestereo.hawthorne.HawthorneClient
+import com.watchhawthornestereo.storage.LocalFilesystem
 import com.watchhawthornestereo.{PlaySpec, Settings}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.libs.ws.ahc.{AhcWSClient, AhcWSClientConfigFactory}
@@ -19,11 +20,12 @@ class ControllerSpec extends PlaySpec with Results with GuiceOneAppPerSuite {
   implicit val ec: ExecutionContextExecutor = global
 
   def withRealController(testCode: Controller => Any): Any = {
-    val environment   = Environment(new File("."), this.getClass.getClassLoader, Mode.Test)
-    val wsConfig      = AhcWSClientConfigFactory.forConfig(classLoader = environment.classLoader)
-    val mat           = app.materializer
-    val ws            = AhcWSClient(wsConfig)(mat)
-    val spotifyClient = HawthorneClient(ws, settings)(ec)
+    val environment = Environment(new File("."), this.getClass.getClassLoader, Mode.Test)
+    val wsConfig = AhcWSClientConfigFactory.forConfig(classLoader = environment.classLoader)
+    val mat = app.materializer
+    val ws = AhcWSClient(wsConfig)(mat)
+    val fs = LocalFilesystem(settings)
+    val spotifyClient = HawthorneClient(ws, fs, settings)(ec)
     try {
       testCode(Controller(spotifyClient, Helpers.stubControllerComponents())) // loan the controller
     } finally ws.close()
@@ -31,8 +33,8 @@ class ControllerSpec extends PlaySpec with Results with GuiceOneAppPerSuite {
 
   "Controller" must {
     "return valid 200 response" in withRealController { controller =>
-      val result: Future[Result] = controller.findNewListings().apply(FakeRequest())
-      val json: String           = contentAsString(result)
+      val result: Future[Result] = controller.getListings().apply(FakeRequest())
+      val json: String = contentAsString(result)
       json.take(49) must include("{\"listings\":[{\"link\":\"https://www.hawthornestereo")
       json mustNot include("null")
     }
