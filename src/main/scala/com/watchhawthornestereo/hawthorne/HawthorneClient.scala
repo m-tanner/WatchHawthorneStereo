@@ -1,6 +1,6 @@
 package com.watchhawthornestereo.hawthorne
 
-import com.watchhawthornestereo.storage.LocalFilesystem
+import com.watchhawthornestereo.storage.{GoogleCloudStorage, LocalFilesystem}
 import com.watchhawthornestereo.{Client, Settings}
 import org.json4s.DefaultFormats
 import org.json4s.native.{Json => Json4s}
@@ -15,14 +15,16 @@ import scala.jdk.CollectionConverters._
 import scala.language.{implicitConversions, postfixOps}
 import scala.util.{Failure, Success, Try}
 
-class HawthorneClient @Inject()(ws: WSClient, fs: LocalFilesystem, settings: Settings)(implicit ec: ExecutionContext)
-  extends Client(ws, fs, settings)(ec) {
+class HawthorneClient @Inject()(ws: WSClient, fs: LocalFilesystem, gs: GoogleCloudStorage, settings: Settings)(implicit
+                                                                                                               ec: ExecutionContext
+) extends Client(ws, fs, gs, settings)(ec) {
 
   def getNewest: Try[String] = {
     val newListings = getListings
-    fs.read match {
+    fs.read(settings.filepath) match {
       case Success(value) =>
-        fs.save(newListings) // update it so that next time it's up to date
+        fs.save(newListings, settings.filepath) // update it so that next time it's up to date
+        // gs.save(newListings) // TODO fs vs gs?
         Success(calculateDifference(newListings, value))
       case Failure(exception) => Failure(exception)
     }
@@ -51,13 +53,14 @@ class HawthorneClient @Inject()(ws: WSClient, fs: LocalFilesystem, settings: Set
   private def fetchRssListings: List[RssListing] = {
     val doc = Jsoup.connect(settings.hawthorneRss).get()
     val elements = doc.select("item").asScala
-    val listings = for (e <- elements)
-      yield RssListing(
-        link = e.select("link").text(),
-        pubDate = e.select("pubDate").text(),
-        title = e.select("title").text(),
-        img = scrapeImageSourceFromDescription(e),
-      )
+    val listings =
+      for (e <- elements)
+        yield RssListing(
+          link = e.select("link").text(),
+          pubDate = e.select("pubDate").text(),
+          title = e.select("title").text(),
+          img = scrapeImageSourceFromDescription(e),
+        )
 
     listings.toList
   }
@@ -83,11 +86,12 @@ class HawthorneClient @Inject()(ws: WSClient, fs: LocalFilesystem, settings: Set
       title = rss.title,
       img = rss.img,
       price = html.price,
-      description = html.description
+      description = html.description,
     )
   }
 }
 
 object HawthorneClient {
-  def apply(ws: WSClient, fs: LocalFilesystem, settings: Settings)(ec: ExecutionContext) = new HawthorneClient(ws, fs, settings)(ec)
+  def apply(ws: WSClient, fs: LocalFilesystem, gs: GoogleCloudStorage, settings: Settings)(ec: ExecutionContext) =
+    new HawthorneClient(ws, fs, gs, settings)(ec)
 }

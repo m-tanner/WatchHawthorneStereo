@@ -9,7 +9,7 @@ import scala.language.postfixOps
 import scala.util.{Failure, Success, Try}
 
 class Controller @Inject()(val hawthorneClient: HawthorneClient, val controllerComponents: ControllerComponents)
-    extends BaseController
+  extends BaseController
     with LazyLogging {
 
   def getNewest: Action[AnyContent] = Action {
@@ -28,6 +28,17 @@ class Controller @Inject()(val hawthorneClient: HawthorneClient, val controllerC
         logger.error(s"$methodName failed")
         InternalServerError("sorry, but we could not complete your request")
     }
+  }
+
+  private def logMemory(): Unit = {
+    // memory info
+    val mb = 1024 * 1024
+    val runtime = Runtime.getRuntime
+    logger.debug("** ALL RESULTS IN MB **")
+    logger.debug("** Used Memory:  " + (runtime.totalMemory - runtime.freeMemory) / mb)
+    logger.debug("** Free Memory:  " + runtime.freeMemory / mb)
+    logger.debug("** Total Memory: " + runtime.totalMemory / mb)
+    logger.debug("** Max Memory:   " + runtime.maxMemory / mb)
   }
 
   def getListings: Action[AnyContent] = Action {
@@ -49,17 +60,6 @@ class Controller @Inject()(val hawthorneClient: HawthorneClient, val controllerC
         logger.error(s"$methodName failed")
         InternalServerError("sorry, but we could not complete your request")
     }
-  }
-
-  private def logMemory(): Unit = {
-    // memory info
-    val mb      = 1024 * 1024
-    val runtime = Runtime.getRuntime
-    logger.debug("** ALL RESULTS IN MB **")
-    logger.debug("** Used Memory:  " + (runtime.totalMemory - runtime.freeMemory) / mb)
-    logger.debug("** Free Memory:  " + runtime.freeMemory / mb)
-    logger.debug("** Total Memory: " + runtime.totalMemory / mb)
-    logger.debug("** Max Memory:   " + runtime.maxMemory / mb)
   }
 
 }

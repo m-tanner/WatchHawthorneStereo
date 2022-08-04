@@ -12,10 +12,14 @@ class LocalFileSystemSpec extends PlaySpec with GuiceOneAppPerSuite {
   private val localFilesystem = LocalFilesystem(settings)
 
   "LocalFileSystem" must {
+    "Successfully open a file" in {
+      val fromRead = localFilesystem.read("./src/test/resources/listings.json")
+      fromRead.get.length must be > 100
+    }
     "Successfully save a file, then open it" in {
       val toSave = "{\"listings\":[]}"
-      localFilesystem.save(toSave)
-      val fromSave = localFilesystem.read match {
+      localFilesystem.save(toSave, "./temp/test_listings.json")
+      val fromSave = localFilesystem.read("./temp/test_listings.json") match {
         case Success(value) => value
         case Failure(_) => fail()
       }

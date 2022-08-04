@@ -33,6 +33,7 @@ distribution. But you can also rely on this as a developer by running commands l
 ./bin/sbt fmt
 ./bin/sbt compile
 ./bin/sbt test
+./bin/sbt "testOnly *PublisherSpec"
 ```
 
 You can also [install sbt](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Mac.html) locally on your machine, but
@@ -96,7 +97,9 @@ skaffold run
 
 Cloud Run can run arbitrary containers.
 
-The app is deployed [here](https://console.cloud.google.com/run/detail/us-west1/streaming-service-converter-3/revisions?project=four-track-friday-2) (access is required to view this page).
+The app is
+deployed [here](https://console.cloud.google.com/run/detail/us-west1/streaming-service-converter-3/revisions?project=four-track-friday-2) (
+access is required to view this page).
 
 # Quickstart
 

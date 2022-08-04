@@ -8,6 +8,10 @@ class Settings @Inject() (config: Config) {
   val rootUrl: String = config.getString("app.config.rootUrl")
   val hawthorneRss: String = config.getString("app.config.hawthorneRss")
   val filepath: String = config.getString("app.config.filepath")
+  val project: String = config.getString("app.config.project")
+  val bucket: String = config.getString("app.config.bucket")
+  val credentials: String = config.getString("app.config.credentials")
+  require(credentials != "changme")
 }
 
 object Settings {

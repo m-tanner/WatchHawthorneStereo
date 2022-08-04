@@ -1,7 +1,7 @@
 package com.watchhawthornestereo.v1
 
 import com.watchhawthornestereo.hawthorne.HawthorneClient
-import com.watchhawthornestereo.storage.LocalFilesystem
+import com.watchhawthornestereo.storage.{GoogleCloudStorage, LocalFilesystem}
 import com.watchhawthornestereo.{PlaySpec, Settings}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.libs.ws.ahc.{AhcWSClient, AhcWSClientConfigFactory}
@@ -16,7 +16,9 @@ import scala.concurrent.{ExecutionContextExecutor, Future}
 
 class ControllerSpec extends PlaySpec with Results with GuiceOneAppPerSuite {
 
-  private val settings                      = Settings.apply
+  private val settings = Settings.apply
+  private val fs = LocalFilesystem(settings)
+  private val gs = GoogleCloudStorage(settings)
   implicit val ec: ExecutionContextExecutor = global
 
   def withRealController(testCode: Controller => Any): Any = {
@@ -24,8 +26,7 @@ class ControllerSpec extends PlaySpec with Results with GuiceOneAppPerSuite {
     val wsConfig = AhcWSClientConfigFactory.forConfig(classLoader = environment.classLoader)
     val mat = app.materializer
     val ws = AhcWSClient(wsConfig)(mat)
-    val fs = LocalFilesystem(settings)
-    val spotifyClient = HawthorneClient(ws, fs, settings)(ec)
+    val spotifyClient = HawthorneClient(ws, fs, gs, settings)(ec)
     try {
       testCode(Controller(spotifyClient, Helpers.stubControllerComponents())) // loan the controller
     } finally ws.close()

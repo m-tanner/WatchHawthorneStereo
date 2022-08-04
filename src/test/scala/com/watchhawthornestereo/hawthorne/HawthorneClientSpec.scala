@@ -1,6 +1,6 @@
 package com.watchhawthornestereo.hawthorne
 
-import com.watchhawthornestereo.storage.LocalFilesystem
+import com.watchhawthornestereo.storage.{GoogleCloudStorage, LocalFilesystem}
 import com.watchhawthornestereo.{PlaySpec, Settings}
 import org.scalatest.PrivateMethodTester
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -17,15 +17,16 @@ class HawthorneClientSpec extends PlaySpec with Results with PrivateMethodTester
 
   private val settings = Settings.apply
   private val fs = LocalFilesystem(settings)
+  private val gs = GoogleCloudStorage(settings)
   implicit val ec: ExecutionContextExecutor = global
 
   def withRealClient(testCode: HawthorneClient => Any): Any = {
     val environment = Environment(new File("."), this.getClass.getClassLoader, Mode.Test)
-    val wsConfig    = AhcWSClientConfigFactory.forConfig(classLoader = environment.classLoader)
-    val mat         = app.materializer
-    val ws          = AhcWSClient(wsConfig)(mat)
+    val wsConfig = AhcWSClientConfigFactory.forConfig(classLoader = environment.classLoader)
+    val mat = app.materializer
+    val ws = AhcWSClient(wsConfig)(mat)
     try {
-      testCode(HawthorneClient(ws, fs, settings)(ec)) // loan the client
+      testCode(HawthorneClient(ws, fs, gs, settings)(ec)) // loan the client
     } finally ws.close()
 
   }
@@ -44,7 +45,7 @@ class HawthorneClientSpec extends PlaySpec with Results with PrivateMethodTester
     }
     "successfully find the difference" in withRealClient { client =>
       // initialize an empty file
-      fs.save("{\"listings\":[]}")
+      fs.save("{\"listings\":[]}", "./temp/listings.json")
       val firstRun = client.getNewest
       firstRun.get.length must be > 100 // random number
       // contents should now be saved in the file

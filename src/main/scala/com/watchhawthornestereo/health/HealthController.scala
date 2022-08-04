@@ -12,9 +12,8 @@ class HealthController @Inject() (
   val settings: Settings,
 ) extends BaseController {
 
-  val logger: Logger = Logger(this.getClass)
-
   private lazy val ONLINE_MESSAGE = "service is online"
+  val logger: Logger = Logger(this.getClass)
 
   def index: Action[AnyContent] = Action {
     logger.debug(s"index $ONLINE_MESSAGE")

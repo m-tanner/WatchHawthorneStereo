@@ -13,6 +13,8 @@ object Common {
   )
 
   val playWsStandaloneVersion = "2.1.10"
+  val AkkaVersion = "2.6.19"
+  val AkkaHttpVersion = "10.2.9"
 
   // Shared Dependencies
   val guice = "com.google.inject" % "guice" % "5.1.0"
@@ -21,7 +23,11 @@ object Common {
   val logback = "ch.qos.logback" % "logback-classic" % "1.2.11"
   val json4sNative = "org.json4s" %% "json4s-native" % "4.0.5"
   val jSoup = "org.jsoup" % "jsoup" % "1.14.3"
-  val gCloudStorage = "com.google.cloud" % "google-cloud-storage" % "2.8.1"
+  val gCloudStorage = "com.google.cloud" % "google-cloud-storage" % "2.10.0"
+  val akkaPubSub = "com.lightbend.akka" %% "akka-stream-alpakka-google-cloud-pub-sub" % "3.0.4"
+  val akkaStream = "com.typesafe.akka" %% "akka-stream" % AkkaVersion
+  val akkaHttp = "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion
+  val akkaSpray = "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion
 
   // Testing
   val scalaTest = "org.scalatest" %% "scalatest" % "3.2.12" % Test

@@ -13,30 +13,33 @@ Common.settings
 
 maintainer := "tanner.mbt@gmail.com"
 
+lazy val root = (project in file("."))
+  .settings(
+    name := "watch_hawthorne_stereo"
+  )
 val runtimeDependencies = Seq(
   Common.typesafeConfig,
   Common.scalaLogging,
   Common.logback,
-  Common.guice,              // eliminates the use of reflection
+  Common.guice, // eliminates the use of reflection
   play.sbt.PlayImport.guice, // needs both guice dependencies
   play.sbt.PlayImport.ws,
   Common.json4sNative,
   Common.jSoup,
+  Common.gCloudStorage,
+  Common.akkaPubSub,
+  Common.akkaStream,
+  Common.akkaHttp,
+  Common.akkaSpray,
 )
 
+libraryDependencies ++= runtimeDependencies ++ testDependencies
 val testDependencies = Seq(
   Common.scalaTest,
   Common.scalaTestPlus,
   Common.wsStandalone,
   Common.wsStandaloneJson,
 )
-
-libraryDependencies ++= runtimeDependencies ++ testDependencies
-
-lazy val root = (project in file("."))
-  .settings(
-    name := "watch_hawthorne_stereo"
-  )
 
 Compile / scalaSource       := baseDirectory.value / "src/main/scala"
 Compile / resourceDirectory := baseDirectory.value / "src/main/resources"
