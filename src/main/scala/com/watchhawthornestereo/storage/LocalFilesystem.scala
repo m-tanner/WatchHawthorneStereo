@@ -13,9 +13,6 @@ import scala.util.{Try, Using}
 
 class LocalFilesystem @Inject()(settings: Settings) extends LazyLogging {
   private val folder = settings.filepath
-
-  private def now: String = LocalDateTime.now().toString // use time as filename to keep multiple copies
-
   private val defaultFilepath = s"$folder/$now"
   private var mostRecentFilepath = defaultFilepath
 
@@ -49,6 +46,8 @@ class LocalFilesystem @Inject()(settings: Settings) extends LazyLogging {
       // all other exceptions will explode
     }
   }
+
+  private def now: String = LocalDateTime.now().toString // use time as filename to keep multiple copies
 
 }
 
