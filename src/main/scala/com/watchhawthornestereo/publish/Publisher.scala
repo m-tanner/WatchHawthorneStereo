@@ -20,11 +20,7 @@ class Publisher @Inject()(settings: Settings) extends LazyLogging {
   implicit val ec: ExecutionContext = global
 
   private val config = PubSubConfig()
-  private val topic = "watchhawthornestereo"
-  private val subscription = "projects/four-track-friday-2/topics/watchhawthornestereo-sub"
-  // https://console.cloud.google.com/cloudpubsub/subscription/detail/watchhawthornestereo-sub?project=four-track-friday-2
-  // messages are going here successfully
-  // TODO now these messages need to trigger a cloud run that sends an email
+  private val topic = settings.topic
 
   def publish(message: String): Unit = {
     val publishMessage = PublishMessage(new String(Base64.getEncoder.encode(message.getBytes)))
@@ -36,10 +32,8 @@ class Publisher @Inject()(settings: Settings) extends LazyLogging {
 
     val publishedMessageIds: Future[Seq[Seq[String]]] = source.via(publishFlow).runWith(Sink.seq)
 
-    publishedMessageIds.map(println(_))
-
-    Await.result(publishedMessageIds, 30 seconds)
-    println("here")
+    Await.result(publishedMessageIds, 10 seconds)
+    publishedMessageIds.foreach(id => logger.info(s"Successfully published ${id.mkString} to $topic"))
   }
 }
 

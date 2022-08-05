@@ -31,6 +31,8 @@ val runtimeDependencies = Seq(
   Common.akkaStream,
   Common.akkaHttp,
   Common.akkaSpray,
+  Common.mailer,
+  Common.mailerGuice,
 )
 
 libraryDependencies ++= runtimeDependencies ++ testDependencies

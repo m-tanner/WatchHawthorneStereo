@@ -12,13 +12,26 @@ class Controller @Inject()(val hawthorneClient: HawthorneClient, val controllerC
   extends BaseController
     with LazyLogging {
 
-  def getNewest: Action[AnyContent] = Action {
+  def getNewest: Action[AnyContent] = {
     val methodName = "getNewest"
     logger.info(methodName)
 
     val response = hawthorneClient.getNewest
 
-    logMemory() // TODO this is for debugging, remove when able
+    handleCommon(response, methodName)
+  }
+
+  def getListings: Action[AnyContent] = {
+    val methodName = "getListings"
+    logger.info(methodName)
+
+    val response = Try(hawthorneClient.getListings)
+
+    handleCommon(response, methodName)
+  }
+
+  private def handleCommon(response: Try[String], methodName: String): Action[AnyContent] = Action {
+    logMemory()
 
     response match {
       case Success(s) =>
@@ -29,7 +42,6 @@ class Controller @Inject()(val hawthorneClient: HawthorneClient, val controllerC
         InternalServerError("sorry, but we could not complete your request")
     }
   }
-
   private def logMemory(): Unit = {
     // memory info
     val mb = 1024 * 1024
@@ -39,27 +51,6 @@ class Controller @Inject()(val hawthorneClient: HawthorneClient, val controllerC
     logger.debug("** Free Memory:  " + runtime.freeMemory / mb)
     logger.debug("** Total Memory: " + runtime.totalMemory / mb)
     logger.debug("** Max Memory:   " + runtime.maxMemory / mb)
-  }
-
-  def getListings: Action[AnyContent] = Action {
-    val methodName = "getListings"
-    logger.info(methodName)
-
-    val response = Try {
-      val result: String = hawthorneClient.getListings
-      result
-    }
-
-    logMemory() // TODO this is for debugging, remove when able
-
-    response match {
-      case Success(s) =>
-        logger.info(s"$methodName succeeded")
-        Ok(s)
-      case Failure(_) =>
-        logger.error(s"$methodName failed")
-        InternalServerError("sorry, but we could not complete your request")
-    }
   }
 
 }

@@ -10,6 +10,7 @@ class Settings @Inject() (config: Config) {
   val filepath: String = config.getString("app.config.filepath")
   val project: String = config.getString("app.config.project")
   val bucket: String = config.getString("app.config.bucket")
+  val topic: String = config.getString("app.config.topic")
   val credentials: String = config.getString("app.config.credentials")
   require(credentials != "changme")
 }

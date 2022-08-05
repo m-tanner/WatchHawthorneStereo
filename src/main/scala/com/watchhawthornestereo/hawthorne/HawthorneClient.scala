@@ -21,13 +21,17 @@ class HawthorneClient @Inject()(ws: WSClient, fs: LocalFilesystem, gs: GoogleClo
 
   def getNewest: Try[String] = {
     val newListings = getListings
-    fs.read(settings.filepath) match {
-      case Success(value) =>
-        fs.save(newListings, settings.filepath) // update it so that next time it's up to date
-        // gs.save(newListings) // TODO fs vs gs?
-        Success(calculateDifference(newListings, value))
+
+    val result = fs.readMostRecent match {
+      case Success(value) => Success(calculateDifference(newListings, value))
       case Failure(exception) => Failure(exception)
     }
+
+    // save stuff for the next run!
+    fs.save(newListings)
+    // gs.save(newListings)
+
+    result
   }
 
   private def calculateDifference(a: String, b: String): String = {

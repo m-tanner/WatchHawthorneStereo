@@ -28,6 +28,8 @@ object Common {
   val akkaStream = "com.typesafe.akka" %% "akka-stream" % AkkaVersion
   val akkaHttp = "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion
   val akkaSpray = "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion
+  val mailer = "com.typesafe.play" %% "play-mailer" % "8.0.1"
+  val mailerGuice = "com.typesafe.play" %% "play-mailer-guice" % "8.0.1"
 
   // Testing
   val scalaTest = "org.scalatest" %% "scalatest" % "3.2.12" % Test
