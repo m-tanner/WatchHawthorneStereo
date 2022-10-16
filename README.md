@@ -12,6 +12,48 @@ Containerization: Docker
 
 Deployment: Google Cloud Run
 
+## Product Design
+
+I want to know what's new on Hawthorne's website. Hawthorne posts listings in batches.
+I want a digest emailed each day.
+
+I am looking for product from a specific brand. I want to get a text for every item that matches that brand.
+
+I am looking for a specific product. I want to get a text for every listing that contains a custom keyword.
+
+## System Design
+
+A "cloud scheduler" job (a cron job) runs 2x/day (midnight, noon).
+Its only job is to trigger an endpoint in this web service.
+
+### V1
+
+The endpoint in this web service is basically a script. It:
+
+1) Fetches the most recently stored previous listings from blob storage
+2) Fetches the currently posted listings from hawthorne's rss feed
+3) Stores the currently posted listings as a new blob
+4) Diffs the previous and current listings
+5) Sends an email of the diff to me directly
+
+### V2
+
+5) Posts the diff to a queue
+6) Queue pushes the message to another endpoint in this service
+
+The second endpoint is also a script. It:
+
+1) Parses the diff into listings
+2) Builds an email
+3) Sends the email just to me
+
+TODO: can i use the queue a lot more?
+
+TODO:
+
+- users (simple json in blob storage: email, name, brands, keywords)
+- ui for subscribing to notifications
+
 ## Technologies Used
 
 ### Scala/sbt/Play
@@ -33,6 +75,7 @@ distribution. But you can also rely on this as a developer by running commands l
 ./bin/sbt fmt
 ./bin/sbt compile
 ./bin/sbt test
+./bin/sbt "testOnly *PublisherSpec"
 ```
 
 You can also [install sbt](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Mac.html) locally on your machine, but
@@ -96,7 +139,9 @@ skaffold run
 
 Cloud Run can run arbitrary containers.
 
-The app is deployed [here](https://console.cloud.google.com/run/detail/us-west1/streaming-service-converter-3/revisions?project=four-track-friday-2) (access is required to view this page).
+The app is
+deployed [here](https://console.cloud.google.com/run/detail/us-west1/streaming-service-converter-3/revisions?project=four-track-friday-2) (
+access is required to view this page).
 
 # Quickstart
 

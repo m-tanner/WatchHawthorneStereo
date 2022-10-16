@@ -10,7 +10,7 @@ import play.api.mvc._
 import play.api.routing.Router
 import play.core.SourceMapper
 
-import javax.inject.{Inject, Provider}
+import javax.inject.{ Inject, Provider }
 import scala.concurrent._
 
 /**
@@ -19,10 +19,10 @@ import scala.concurrent._
  * https://www.playframework.com/documentation/latest/ScalaErrorHandling
  */
 class ErrorHandler(
-  environment: Environment,
+  environment:   Environment,
   configuration: Configuration,
-  sourceMapper: Option[SourceMapper] = None,
-  optionRouter: => Option[Router] = None,
+  sourceMapper:  Option[SourceMapper] = None,
+  optionRouter:  => Option[Router] = None,
 ) extends DefaultHttpErrorHandler(environment, configuration, sourceMapper, optionRouter)
     with LazyLogging {
 
@@ -42,17 +42,13 @@ class ErrorHandler(
 
     Future.successful {
       val result = statusCode match {
-        case BAD_REQUEST =>
-          Results.BadRequest(message)
-        case FORBIDDEN =>
-          Results.Forbidden(message)
-        case NOT_FOUND =>
-          Results.NotFound(message)
+        case BAD_REQUEST => Results.BadRequest(message)
+        case FORBIDDEN   => Results.Forbidden(message)
+        case NOT_FOUND   => Results.NotFound(message)
         case _ if statusCode >= 400 && statusCode < 500 => // client error
           Results.Status(statusCode)
         case _ => // non client error
-          val msg =
-            s"onClientError invoked with non client error status code $statusCode: $message"
+          val msg = s"onClientError invoked with non client error status code $statusCode: $message"
           throw new IllegalArgumentException(msg)
       }
       result
@@ -66,4 +62,5 @@ class ErrorHandler(
   override protected def onProdServerError(request: RequestHeader, exception: UsefulException): Future[Result] = {
     Future.successful(InternalServerError)
   }
+
 }

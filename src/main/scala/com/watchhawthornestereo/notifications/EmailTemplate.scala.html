@@ -1,0 +1,29 @@
+@import com.watchhawthornestereo.hawthorne.UnifiedListing
+@(listings: List[UnifiedListing])
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        Hi,
+
+        Since you last checked, Hawthorne has added the following listings!
+
+        <ul>
+            @for(listing <- listings) {
+                <li><img alt="" src="@listing.img" /></li>
+              <ul>
+                  <li><a href="@listing.link">@listing.title</a></li>
+                  <li>@listing.price</li>
+                  <li>@listing.description</li>
+              </ul>
+            }
+        </ul>
+
+        Cheers,
+        Tanner & Winnie
+    </body>
+</html>

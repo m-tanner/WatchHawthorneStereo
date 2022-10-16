@@ -18,13 +18,13 @@ build:
         buildArgs:
           SERVICE_VERSION: "0.1.0-SNAPSHOT"
   tagPolicy:
-    gitCommit: {}
-  local: {}
+    gitCommit: { }
+  local: { }
 test:
   - image: gcr.io/four-track-friday-2/watch_hawthorne_stereo
     structureTests:
       - ./src/test/container-structure/test_commands.yml
       - ./src/test/container-structure/test_metadata.yml
-deploy: {}
+deploy: { }
 # no custom profiles here
 # this skaffold config stops at pushing the docker image to the registry
