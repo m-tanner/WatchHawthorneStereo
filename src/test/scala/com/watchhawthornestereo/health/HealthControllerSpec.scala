@@ -1,6 +1,6 @@
 package com.watchhawthornestereo.health
 
-import com.watchhawthornestereo.{PlaySpec, Settings}
+import com.watchhawthornestereo.{ PlaySpec, Settings }
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -42,4 +42,5 @@ class HealthControllerSpec extends PlaySpec with Results with GuiceOneAppPerSuit
       bodyText mustBe "service is online"
     }
   }
+
 }

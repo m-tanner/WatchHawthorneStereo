@@ -1,14 +1,14 @@
 package com.watchhawthornestereo.storage
 
-import com.watchhawthornestereo.{PlaySpec, Settings}
+import com.watchhawthornestereo.{ PlaySpec, Settings }
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
 import scala.language.postfixOps
-import scala.util.{Failure, Success}
+import scala.util.{ Failure, Success }
 
 class LocalFileSystemSpec extends PlaySpec with GuiceOneAppPerSuite {
 
-  private val settings = Settings.apply
+  private val settings        = Settings.apply
   private val localFilesystem = LocalFilesystem(settings)
 
   "LocalFileSystem" must {
@@ -21,7 +21,7 @@ class LocalFileSystemSpec extends PlaySpec with GuiceOneAppPerSuite {
       localFilesystem.save(toSave, "./temp/test_listings.json")
       val fromSave = localFilesystem.read("./temp/test_listings.json") match {
         case Success(value) => value
-        case Failure(_) => fail()
+        case Failure(_)     => fail()
       }
       fromSave mustEqual toSave
     }
@@ -30,9 +30,10 @@ class LocalFileSystemSpec extends PlaySpec with GuiceOneAppPerSuite {
       localFilesystem.save(toSave)
       val fromSave = localFilesystem.readMostRecent match {
         case Success(value) => value
-        case Failure(_) => fail()
+        case Failure(_)     => fail()
       }
       fromSave mustEqual toSave
     }
   }
+
 }

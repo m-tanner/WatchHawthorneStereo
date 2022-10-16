@@ -16,4 +16,5 @@ class SettingsSpec extends PlaySpec with GuiceOneAppPerSuite {
       rootUrl mustEqual "https://watchhawthornestereo.com"
     }
   }
+
 }

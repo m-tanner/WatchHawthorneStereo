@@ -17,6 +17,8 @@ lazy val root = (project in file("."))
   .settings(
     name := "watch_hawthorne_stereo"
   )
+  .enablePlugins(SbtTwirl)
+
 val runtimeDependencies = Seq(
   Common.typesafeConfig,
   Common.scalaLogging,
@@ -45,6 +47,7 @@ val testDependencies = Seq(
 
 Compile / scalaSource       := baseDirectory.value / "src/main/scala"
 Compile / resourceDirectory := baseDirectory.value / "src/main/resources"
+Compile / TwirlKeys.compileTemplates / sourceDirectories := (Compile / unmanagedSourceDirectories).value
 
 Test / scalaSource       := baseDirectory.value / "src/test/scala"
 Test / resourceDirectory := baseDirectory.value / "src/test/resources"

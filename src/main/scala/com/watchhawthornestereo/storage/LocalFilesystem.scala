@@ -5,15 +5,14 @@ import com.watchhawthornestereo.Settings
 
 import java.io.IOException
 import java.nio.charset.StandardCharsets
-import java.nio.file.{FileAlreadyExistsException, Files, Path, Paths}
-import java.time.LocalDateTime
+import java.nio.file.{ FileAlreadyExistsException, Files, Path, Paths }
 import javax.inject.Inject
 import scala.io.Source.fromFile
-import scala.util.{Try, Using}
+import scala.util.{ Try, Using }
 
-class LocalFilesystem @Inject()(settings: Settings) extends LazyLogging {
-  private val folder = settings.filepath
-  private val defaultFilepath = s"$folder/$now"
+class LocalFilesystem @Inject() (settings: Settings) extends LazyLogging with StorageUtils {
+  private val folder             = settings.filepath
+  private val defaultFilepath    = s"$folder/$now" // TODO dafuq was i doing with these defaults
   private var mostRecentFilepath = defaultFilepath
 
   def readMostRecent: Try[String] = read(mostRecentFilepath)
@@ -21,7 +20,7 @@ class LocalFilesystem @Inject()(settings: Settings) extends LazyLogging {
   def read(path: String = defaultFilepath): Try[String] = Using(fromFile(path))(s => s.mkString)
 
   @throws(classOf[IOException])
-  def save(contents: String, path: String = defaultFilepath): Unit = {
+  def save(contents: String, path: String = defaultFilepath): Unit = { // TODO update with filename
     val asPath = Paths.get(path)
     createDir(asPath)
     createFile(asPath)
@@ -47,12 +46,12 @@ class LocalFilesystem @Inject()(settings: Settings) extends LazyLogging {
     }
   }
 
-  private def now: String = LocalDateTime.now().toString // use time as filename to keep multiple copies
-
 }
 
 object LocalFilesystem {
+
   def apply(settings: Settings): LocalFilesystem = {
     new LocalFilesystem(settings)
   }
+
 }
